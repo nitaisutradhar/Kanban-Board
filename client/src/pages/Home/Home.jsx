@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { TaskProvider } from "../../contexts/TaskContext/TaskProvider";
 import KanbanBoard from "../../components/KanbanBoard";
+import AddEditTaskModal from "../../components/AddEditTaskModal";
 
 const Home = () => {
+    const [selectedTask, setSelectedTask] = useState(null);
   return (
     <TaskProvider>
       <div className="min-h-screen bg-base-100 text-base-content">
@@ -10,6 +12,15 @@ const Home = () => {
           MERN Kanban Board
         </h1>
         <KanbanBoard />
+        
+        {/* Trigger Modal */}
+        <button className="btn btn-success hover:bg-transparent m-6" onClick={() => setSelectedTask({})}>
+        + Add Task
+        </button>
+
+        {selectedTask && (
+        <AddEditTaskModal selectedTask={selectedTask} setSelectedTask={setSelectedTask} />
+        )}
       </div>
     </TaskProvider>
   );
