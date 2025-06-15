@@ -69,7 +69,7 @@ const Login = () => {
                   />
                   <span
                     onClick={() => setShowPass(!showPass)}
-                    className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-500"
+                    className="absolute z-10 top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-500"
                   >
                     {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
                   </span>

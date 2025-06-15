@@ -1,22 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const Task = require('../models/Task');
+const verifyJWT = require('../middlewares/verifyJWT');
 
 // CREATE
-router.post('/', async (req, res) => {
+router.post('/', verifyJWT, async (req, res) => {
+
   try {
-    const newTask = new Task(req.body);
-    const saved = await newTask.save();
-    res.status(201).json(saved);
+    const task = new Task({
+      ...req.body,
+      userEmail: req.tokenEmail, // store the email of logged-in user
+    });
+    const result = await task.save();
+    res.status(201).json(result);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
 
 // READ (all)
-router.get('/', async (req, res) => {
+router.get('/',verifyJWT, async (req, res) => {
+    const userEmail = req.query.userEmail;
+    if(userEmail!== req.tokenEmail){
+        return res.status(403).send({message: 'Forbidden Access'})
+    }
   try {
-    const tasks = await Task.find();
+    const tasks = await Task.find({userEmail}).sort({ dueDate: 1 });
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -24,23 +33,47 @@ router.get('/', async (req, res) => {
 });
 
 // UPDATE
-router.put('/:id', async (req, res) => {
-  try {
-    const updated = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updated);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+router.put('/:id', verifyJWT, async (req, res) => {
+  const taskId = req.params.id;
 
-// DELETE
-router.delete('/:id', async (req, res) => {
   try {
-    await Task.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Task deleted' });
+    const task = await Task.findById(taskId);
+
+    if (!task) return res.status(404).json({ message: 'Task not found' });
+
+    // Check ownership
+    if (task.userEmail !== req.tokenEmail) {
+      return res.status(403).json({ message: 'Access denied: Not your task' });
+    }
+
+    // Update task
+    const updated = await Task.findByIdAndUpdate(taskId, req.body, { new: true });
+    res.json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
+
+// DELETE
+router.delete('/:id', verifyJWT, async (req, res) => {
+  const taskId = req.params.id;
+
+  try {
+    const task = await Task.findById(taskId);
+
+    if (!task) return res.status(404).json({ message: 'Task not found' });
+
+    if (task.userEmail !== req.tokenEmail) {
+      return res.status(403).json({ message: 'Access denied: Not your task' });
+    }
+
+    await Task.findByIdAndDelete(taskId);
+    res.json({ message: 'Task deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 module.exports = router;

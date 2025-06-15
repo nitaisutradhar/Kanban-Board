@@ -7,6 +7,7 @@ const taskSchema = new mongoose.Schema({
   },
   description: String,
   dueDate: Date,
+  userEmail: String,
   status: {
     type: String,
     enum: ['To Do', 'In Progress', 'Completed'],

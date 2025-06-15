@@ -18,7 +18,7 @@ const TaskCard = ({ task, index }) => {
         >
           <h3 className="font-bold">{task.title}</h3>
           <p>{task.description}</p>
-          <p className="text-sm text-gray-500">Due: {new Date(task.dueDate).toLocaleDateString()}</p>
+          <p className="text-sm text-gray-500">Due: {new Date(task.dueDate).toLocaleDateString('en-GB')}</p>
           <div className="mt-2 flex justify-between">
             <button className="btn btn-sm btn-outline btn-info" onClick={() => setSelectedTask(task)}>Edit</button>
             {selectedTask && (
