@@ -4,11 +4,13 @@ import Home from "../pages/Home/Home";
 import Login from "../pages/SignIn/Login";
 import Register from "../pages/Register/Register";
 import PrivateRoute from "../routes/PrivateRoute";
+import ErrorPage from "../pages/ErrorPage";
 
 const router = createBrowserRouter([
     {
         path: "/",
         Component: Root,
+        errorElement: <ErrorPage />,
         children: [
             {
                 index: true,
