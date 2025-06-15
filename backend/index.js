@@ -19,6 +19,9 @@ mongoose.connect(process.env.MONGO_URI)
   process.exit(1);
 });
 
+const taskRoutes = require('./routes/taskRoutes');
+app.use('/api/tasks', taskRoutes);
+
 // Basic route to test server
 app.get('/', (req, res) => {
   res.send('Server is running');
