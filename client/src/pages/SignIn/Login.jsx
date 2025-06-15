@@ -5,14 +5,14 @@ import useAuth from "../../hooks/useAuth";
 import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
-      const navigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
 
-  // Firebase Login
   const { signIn } = useAuth();
+
   const handleLogin = (e) => {
     e.preventDefault();
     signIn(email, password)
@@ -20,16 +20,15 @@ const Login = () => {
         Swal.fire({
           icon: "success",
           title: "Login Successful!",
-          text: "Welcome back to ConfirmRelief!",
+          text: "Welcome back to KanbanBoard!",
           confirmButtonColor: "#06B6D4",
         }).then(() => navigate(`${location.state ? location.state : "/"}`));
       })
       .catch((error) => {
-        const errorMessage = error.message;
         Swal.fire({
           icon: "error",
           title: "Login Failed",
-          text: `Invalid email or password - ${errorMessage}`,
+          text: `Invalid email or password - ${error.message}`,
           toast: true,
           position: "top-end",
           showConfirmButton: false,
@@ -40,47 +39,55 @@ const Login = () => {
   };
 
   return (
-    <div className="hero bg-base-200 min-h-[85vh]">
-      <div className="w-[40%]">
-        <div className="text-center lg:text-left">
-          <div className="card bg-base-100 w-[100%] shrink-0 shadow-2xl">
-            <div className="card-body w-[100%]">
-                <h1 className="text-2xl font-bold text-center">Login Here</h1>
-              <form onSubmit={handleLogin} className="fieldset">
-                <label className="label">Email</label>
+    <div className="min-h-screen bg-gradient-to-r from-cyan-100 to-blue-100 flex items-center justify-center py-8 px-4">
+      <div className="w-full max-w-md">
+        <div className="card bg-white shadow-xl">
+          <div className="card-body">
+            <h2 className="text-3xl font-bold text-center text-primary">Login</h2>
+            <form onSubmit={handleLogin} className="mt-6 space-y-4">
+              <div>
+                <label className="label text-sm font-medium text-gray-700">Email</label>
                 <input
-                 name="email"
-                 onChange={(e) => setEmail(e.target.value)}
-                 type="email" className="input w-full" placeholder="Email" />
-                <label className="label">Password</label>
-                <div className="relative flex items-center">
-                    <input
-                  type={showPass ? 'text' : 'password'}
-                  className="input w-full"
-                  placeholder="Password"
-                  onChange={(e) => setPassword(e.target.value)}
-                  name="password"
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="input input-bordered w-full"
+                  required
                 />
-                <span
-                onClick={() => setShowPass(!showPass)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
-              >
-                {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
-              </span>
+              </div>
+              <div>
+                <label className="label text-sm font-medium text-gray-700">Password</label>
+                <div className="relative">
+                  <input
+                    type={showPass ? "text" : "password"}
+                    name="password"
+                    placeholder="Enter your password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="input input-bordered w-full pr-10"
+                    required
+                  />
+                  <span
+                    onClick={() => setShowPass(!showPass)}
+                    className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-500"
+                  >
+                    {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </span>
                 </div>
-                <div>
-                  <Link className="link link-hover">Forgot password?</Link>
-                </div>
-                <button type="submit" className="btn btn-neutral mt-4">Login</button>
-              </form>
-              {/* Register Link */}
-          <p className="mt-4 text-sm text-center text-gray-500">
-            Don't have an account?{" "}
-            <Link to="/register" className="text-info hover:underline">
-              Register here
-            </Link>
-          </p>
-            </div>
+              </div>
+              <div className="text-right">
+                <Link className="text-sm link link-hover text-info">Forgot password?</Link>
+              </div>
+              <button type="submit" className="btn btn-primary w-full">
+                Login
+              </button>
+            </form>
+            <p className="text-sm mt-4 text-center text-gray-600">
+              Don&apos;t have an account?{" "}
+              <Link to="/register" className="text-primary hover:underline font-semibold">
+                Register here
+              </Link>
+            </p>
           </div>
         </div>
       </div>

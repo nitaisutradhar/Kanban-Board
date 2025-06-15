@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
-import useAuth  from "../../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 import { Eye, EyeOff } from "lucide-react";
 
-
 const Register = () => {
-      const { createUser, setUser, updateUser } = useAuth();
+  const { createUser } = useAuth();
   const [showPass, setShowPass] = useState(false);
-
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
     password: "",
   });
@@ -56,74 +54,75 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { name, email, password } = formData;
-    if (!validatePassword(formData.password)) return;
+    const { email, password } = formData;
+    if (!validatePassword(password)) return;
 
-    // Firebase Authentication
-    createUser(email, password).then(() => {
-      updateUser({ displayName: name }).then(() => {
-        setUser({ ...name, displayName: name });
-        Swal.fire({
-          icon: "success",
-          title: "Registration Successful!",
-          text: `Welcome, ${formData.name}!`,
-          confirmButtonColor: "#06B6D4",
-        }).then(() => navigate("/login"));
-      })
-      .catch((error) => {
-        showToast(error.message, "error");
-      });
-    })
-    .catch((error) => {
-      showToast(error.message, "error")
-    });
+    createUser(email, password)
+      .then(() => {
+            Swal.fire({
+              icon: "success",
+              title: "Registration Successful!",
+              text: `Welcome!`,
+              confirmButtonColor: "#06B6D4",
+            }).then(() => navigate("/"));
+          })
+      .catch((error) => showToast(error.message, "error"));
   };
 
-
   return (
-    <div className="hero bg-base-200 min-h-[85vh]">
-      <div className="w-[40%]">
-        <div className="text-center lg:text-left">
-          <div className="card bg-base-100 w-[100%] shrink-0 shadow-2xl">
-            <div className="card-body w-[100%]">
-                <h1 className="text-2xl font-bold text-center">Register Now</h1>
-              <form onSubmit={handleSubmit} className="fieldset">
-                {/* Name */}
-                <label className="label">Name</label>
-                <input name="name" type="text" className="input w-full" onChange={handleChange} placeholder="Enter your name" />
-                {/* Email */}
-                <label className="label">Email</label>
-                <input name="email" type="email" className="input w-full" onChange={handleChange} placeholder="Email" />
-                {/* Password */}
-                <label className="label">Password</label>
-                <div className="relative flex items-center">
-                    <input
-                  type={showPass ? 'text' : 'password'}
-                  className="input w-full"
-                  placeholder="Password"
+    <div className="min-h-screen bg-gradient-to-r from-cyan-100 to-blue-100 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md">
+        <div className="card bg-white shadow-xl">
+          <div className="card-body">
+            <h2 className="text-3xl font-bold text-center text-primary">Register</h2>
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              {/* Email */}
+              <div>
+                <label className="label text-sm font-medium text-gray-700">Email</label>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="Your email"
+                  className="input input-bordered w-full"
                   onChange={handleChange}
-                  name="password"
+                  required
                 />
-                <span
-                onClick={() => setShowPass(!showPass)}
-                className="z-10 absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
-              >
-                {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
-              </span>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="label text-sm font-medium text-gray-700">Password</label>
+                <div className="relative">
+                  <input
+                    name="password"
+                    type={showPass ? "text" : "password"}
+                    placeholder="Create password"
+                    className="input input-bordered w-full pr-10"
+                    onChange={handleChange}
+                    required
+                  />
+                  <span
+                    onClick={() => setShowPass(!showPass)}
+                    className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-500"
+                  >
+                    {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </span>
                 </div>
-                
-                <div>
-                  <a className="link link-hover">Forgot password?</a>
-                </div>
-                <button type="submit" className="btn btn-neutral mt-4">Register</button>
-              </form>
-              <p className="mt-4 text-sm text-center text-gray-500">
-            Already have an account?{" "}
-            <Link to="/login" className="text-info hover:underline">
-              Login here
-            </Link>
-          </p>
-            </div>
+              </div>
+
+              {/* Button */}
+              <button type="submit" className="btn btn-primary w-full mt-2">
+                Register
+              </button>
+            </form>
+
+            {/* Already have account */}
+            <p className="text-sm mt-4 text-center text-gray-600">
+              Already have an account?{" "}
+              <Link to="/login" className="text-primary font-semibold hover:underline">
+                Login here
+              </Link>
+            </p>
           </div>
         </div>
       </div>
