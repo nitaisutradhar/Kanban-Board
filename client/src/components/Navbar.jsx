@@ -2,6 +2,7 @@ import React from "react";
 import { Link, NavLink } from "react-router";
 import Swal from "sweetalert2";
 import useAuth from "../hooks/useAuth";
+import ActiveLink from "../routes/ActiveLink";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
@@ -33,18 +34,9 @@ const Navbar = () => {
   const navLinks = (
     <>
       <li>
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            `font-medium ${
-              isActive
-                ? "text-primary border-b-2 border-primary"
-                : "text-base-content hover:text-primary"
-            }`
-          }
-        >
+        <ActiveLink to='/'>
           Home
-        </NavLink>
+        </ActiveLink>
       </li>
     </>
   );

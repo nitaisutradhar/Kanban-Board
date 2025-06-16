@@ -7,26 +7,44 @@ const AddEditTaskModal = ({ selectedTask, setSelectedTask }) => {
     title: '',
     description: '',
     dueDate: '',
+    priority: 'Medium',
+    tags: '', // as comma-separated string for UI
   });
-  const hasValues = Object.keys(selectedTask).length;
+  const hasValues = Object.keys(selectedTask || {}).length > 0;
 
 
   useEffect(() => {
     if (hasValues) {
       setFormData({
-        title: selectedTask.title,
-        description: selectedTask.description,
+        title: selectedTask.title || '',
+        description: selectedTask.description || '',
+        priority: selectedTask.priority || 'Medium',
+        tags: selectedTask.tags?.join(', ') || '',
         dueDate: selectedTask.dueDate?.split('T')[0] || '',
       });
     }
   }, [hasValues, selectedTask]);
 
+  console.log(formData);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const tagsArray = formData.tags
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0);
+
+      const payload = {
+        ...formData,
+        tags: tagsArray,
+      };
+      console.log(payload);
+
     if (hasValues) {
-      updateTask(selectedTask._id, { ...formData, status: selectedTask.status });
+      updateTask(selectedTask._id, { ...payload, status: selectedTask.status });
     } else {
-      addTask({ ...formData, status: 'To Do' });
+      addTask({ ...payload, status: 'To Do' });
     }
     setSelectedTask(null);
   };
@@ -63,6 +81,30 @@ const AddEditTaskModal = ({ selectedTask, setSelectedTask }) => {
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
         />
       </div>
+      {/* Priority */}
+      <div>
+        <label className="label font-medium text-sm">Priority</label>
+        <select className="select select-bordered w-full" name="priority" value={formData.priority} onChange={(e) => setFormData({ ...formData, priority: e.target.value })}>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+      </div>
+      
+
+      {/* Tags */}
+      <div>
+        <label className="label font-medium text-sm">Tags</label>
+        <input
+          className="input input-bordered w-full"
+          type="text"
+          placeholder="Enter tags comma separated"
+          value={formData.tags}
+          onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+        />
+      </div>
+      
+
 
       {/* Due Date */}
       <div>
