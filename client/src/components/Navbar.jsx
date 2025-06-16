@@ -38,6 +38,11 @@ const Navbar = () => {
           Home
         </ActiveLink>
       </li>
+      <li>
+        <ActiveLink to='/profile'>
+          My Profile
+        </ActiveLink>
+      </li>
     </>
   );
 
