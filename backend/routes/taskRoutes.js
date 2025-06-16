@@ -19,16 +19,12 @@ router.post('/', verifyJWT, async (req, res) => {
 });
 
 // READ (all)
-router.get('/',verifyJWT, async (req, res) => {
-    const userEmail = req.query.userEmail;
-    if(userEmail!== req.tokenEmail){
-        return res.status(403).send({message: 'Forbidden Access'})
-    }
+router.get('/', verifyJWT, async (req, res) => {
   try {
-    const tasks = await Task.find({userEmail}).sort({ dueDate: 1 });
+    const tasks = await Task.find({ userEmail: req.tokenEmail });
     res.json(tasks);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: 'Failed to fetch tasks' });
   }
 });
 

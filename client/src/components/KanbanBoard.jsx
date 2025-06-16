@@ -21,7 +21,7 @@ const KanbanBoard = () => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="grid grid-cols-3 gap-6 p-6">
+      <div className="grid md:grid-cols-3 gap-6 p-6">
         {statuses.map((status) => (
           <Column
             key={status}
