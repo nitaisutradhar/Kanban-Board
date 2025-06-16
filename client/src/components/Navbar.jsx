@@ -3,6 +3,8 @@ import { Link, NavLink } from "react-router";
 import Swal from "sweetalert2";
 import useAuth from "../hooks/useAuth";
 import ActiveLink from "../routes/ActiveLink";
+import logo from "/logo.png";
+
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
@@ -70,8 +72,11 @@ const Navbar = () => {
               {navLinks}
             </ul>
           </div>
-          <Link to="/" className="text-2xl font-bold text-primary hover:opacity-80 transition">
-            KanbanBoard
+          {/* Logo */}
+          
+          <Link to="/" className="flex gap-2 text-2xl font-bold text-primary hover:opacity-80 transition">
+          <img src={logo} alt="Logo" className="w-8 h-8" />
+            <span className="text-primary">KanbanBoard</span>
           </Link>
         </div>
 
